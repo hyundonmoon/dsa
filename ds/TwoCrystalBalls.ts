@@ -1,5 +1,6 @@
+// honestly feel like my answer is better lol
 export default function two_crystal_balls(breaks: boolean[]): number {
-    let window = Math.floor(Math.sqrt(breaks.length));
+    const window = Math.floor(Math.sqrt(breaks.length));
     let firstBreakPoint = 0;
 
     // attempts to find the first place at which the ball breaks
@@ -22,4 +23,3 @@ export default function two_crystal_balls(breaks: boolean[]): number {
 
     return -1;
 }
-``;
