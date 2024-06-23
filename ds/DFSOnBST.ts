@@ -1,3 +1,10 @@
+interface BinaryNode<T> {
+    value: T;
+    left: BinaryNode<T> | null;
+    right: BinaryNode<T> | null;
+};
+
+
 function walk(node: BinaryNode<number> | null, needle: number): boolean {
     if (!node) {
         return false;
