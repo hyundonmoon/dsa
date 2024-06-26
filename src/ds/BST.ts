@@ -5,49 +5,171 @@ export default class BinarySearchTree<T> {
     this.root = null;
   }
 
-  search(value: T) {
-    this.searchNode(this.root, value);
-  }
-
-  private searchNode(node: BinaryNode<T> | null, target: T): boolean {
-    if (!node) {
-      return false;
-    }
-
-    if (node.value === target) {
-      return true;
-    }
-
-    if (node.value <= target) {
-      return this.searchNode(node.left, target);
-    }
-
-    return this.searchNode(node.right, target);
-  }
-
   insert(value: T): void {
+    const newNode: BinaryNode<T> = { value, left: null, right: null };
+
     if (!this.root) {
-      const newNode = { value } as BinaryNode<T>;
       this.root = newNode;
       return;
     }
 
-    this.insertNode(this.root, value);
+    // recursive
+    // this.insertNodeRecursive(this.root, value);
+
+    // iterative
+    this.insertNodeIterative(this.root, value);
   }
 
-  private insertNode(parentNode: BinaryNode<T>, value: T): void {
-    if (parentNode.value <= value) {
-      if (parentNode.left) {
-        this.insertNode(parentNode.left, value);
+  private insertNodeRecursive(parent: BinaryNode<T>, value: T): void {
+    // inserts node using recursion
+    if (value > parent.value) {
+      if (!!parent.right) {
+        this.insertNodeRecursive(parent.right, value);
       } else {
-        parentNode.left = { value } as BinaryNode<T>;
+        parent.right = { value, left: null, right: null };
       }
     } else {
-      if (parentNode.right) {
-        this.insertNode(parentNode.right, value);
+      if (!!parent.left) {
+        this.insertNodeRecursive(parent.left, value);
       } else {
-        parentNode.right = { value } as BinaryNode<T>;
+        parent.left = { value, left: null, right: null };
       }
     }
+  }
+
+  private insertNodeIterative(startingPoint: BinaryNode<T>, value: T): void {
+    let curr = startingPoint;
+
+    while (curr) {
+      if (value > curr.value) {
+        if (curr.right) {
+          curr = curr.right;
+        } else {
+          curr.right = { value, left: null, right: null } as BinaryNode<T>;
+          break;
+        }
+      } else {
+        if (curr.left) {
+          curr = curr.left;
+        } else {
+          curr.left = { value, left: null, right: null } as BinaryNode<T>;
+          break;
+        }
+      }
+    }
+
+    return;
+  }
+
+  delete(value: T): void {
+    if (!this.root) {
+      return;
+    }
+
+    this.root = this.deleteNodeRecursive(this.root, value);
+  }
+
+  private deleteNodeRecursive(
+    node: BinaryNode<T> | null,
+    value: T
+  ): BinaryNode<T> | null {
+    if (node === null) {
+      return null;
+    }
+
+    if (value > node.value) {
+      node.right = this.deleteNodeRecursive(node?.right, value);
+      return node;
+    }
+
+    if (value < node.value) {
+      node.left = this.deleteNodeRecursive(node?.left, value);
+      return node;
+    }
+
+    // target node/value found
+    if (node.left === null && node.right === null) {
+      // node has no child nodes -> no cleanup required, return immediately
+      return null;
+    }
+
+    if (!!node.left && !!node.right) {
+      // node has two child nodes
+      // -> find the largest node among the node.left subtree,
+      // -> delete that node from its position,
+      // -> then replace this node with that node
+      const replacementNode = this.findLargestNode(node?.left);
+      if (replacementNode) {
+        replacementNode.left = this.deleteNodeRecursive(
+          node.left,
+          replacementNode.value
+        );
+        replacementNode.right = node.right;
+      }
+
+      return replacementNode;
+    }
+
+    // node has one child node
+    return node?.left || node?.right;
+  }
+
+  private findLargestNode(node: BinaryNode<T> | null): BinaryNode<T> | null {
+    if (node === null) {
+      return null;
+    }
+
+    let curr = node;
+
+    while (curr.right) {
+      curr = curr.right;
+    }
+
+    return curr;
+  }
+
+  search(value: T): boolean {
+    if (!this.root) {
+      return false;
+    }
+
+    // recursive
+    // return this.searchNodeRecursive(this.root, value);
+
+    // iterative
+    return this.searchNodeIterative(this.root, value);
+  }
+
+  private searchNodeIterative(
+    startingPoint: BinaryNode<T> | null,
+    value: T
+  ): boolean {
+    let curr: BinaryNode<T> | null = startingPoint;
+
+    while (curr && curr.value !== value) {
+      if (curr.value >= value) {
+        curr = curr.left;
+      } else {
+        curr = curr.right;
+      }
+    }
+
+    return curr?.value === value;
+  }
+
+  private searchNodeRecursive(node: BinaryNode<T> | null, value: T): boolean {
+    if (!node) {
+      return false;
+    }
+
+    if (node?.value === value) {
+      return true;
+    }
+
+    if (value > node.value) {
+      return this.searchNodeRecursive(node?.right, value);
+    }
+
+    return this.searchNodeRecursive(node?.left, value);
   }
 }
