@@ -3,3 +3,7 @@ declare interface BinaryNode<T> {
   left: BinaryNode<T> | null;
   right: BinaryNode<T> | null;
 }
+
+declare interface TrieNode {
+  children: Record<string, TrieNode>;
+}
