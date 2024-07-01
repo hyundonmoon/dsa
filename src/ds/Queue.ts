@@ -45,4 +45,8 @@ export default class Queue<T> {
   peek(): T | undefined {
     return this.head?.value;
   }
+
+  get isEmpty(): boolean {
+    return this.length === 0;
+  }
 }
