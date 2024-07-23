@@ -3,27 +3,31 @@
 // returns pivot index
 // not recursive!
 function partition(arr: number[], lo: number, hi: number): number {
-  let swapIdx = lo - 1;
+  let i = lo - 1; // the eventual position of the pivot item
   const pivotItem = arr[hi];
 
-  for (let i = lo; i < hi; i++) {
-    if (arr[i] <= pivotItem) {
-      swapIdx += 1;
-      const temp = arr[swapIdx];
-      arr[swapIdx] = arr[i];
-      arr[i] = temp;
+  for (let j = lo; j < hi; j++) {
+    const current = arr[j];
+    if (current <= pivotItem) {
+      i++;
+      arr[j] = arr[i];
+      arr[i] = current;
     }
   }
 
-  swapIdx += 1;
-  arr[hi] = arr[swapIdx];
-  arr[swapIdx] = pivotItem;
+  i++;
+  arr[hi] = arr[i];
+  arr[i] = pivotItem;
 
-  return swapIdx;
+  return i;
 }
 
 // recursively calls partition to change item positions in place
-function quicksort(arr: number[], lo: number, hi: number): void {
+export default function quicksort(
+  arr: number[],
+  lo = 0,
+  hi = arr.length - 1
+): void {
   // base cases
   if (lo >= hi || arr.length <= 1) {
     return;
@@ -32,8 +36,4 @@ function quicksort(arr: number[], lo: number, hi: number): void {
   const pivot = partition(arr, lo, hi);
   quicksort(arr, lo, pivot - 1);
   quicksort(arr, pivot + 1, hi);
-}
-
-export default function quick_sort(arr: number[]): void {
-  quicksort(arr, 0, arr.length - 1);
 }
