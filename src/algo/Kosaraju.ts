@@ -92,14 +92,3 @@ export default function kosaraju(graph: Graph): number[][] {
 
   return stronglyConnectedComponentsArray;
 }
-
-const graph: Graph = {
-  0: [1],
-  1: [2],
-  2: [3],
-  3: [4],
-  4: [],
-};
-
-const results = kosaraju(graph);
-console.log(results);
